@@ -1,0 +1,79 @@
+#cloud-config
+
+# This is the user-data configuration file for cloud-init. By default this sets
+# up an initial user called "ubuntu" with password "ubuntu", which must be
+# changed at first login. However, many additional actions can be initiated on
+# first boot from this file. The cloud-init documentation has more details:
+#
+# https://cloudinit.readthedocs.io/
+#
+# Some additional examples are provided in comments below the default
+# configuration.
+
+fqdn: test-esxi
+hostname: test-esxi
+
+# On first boot, set the (default) ubuntu user's password to "ubuntu" and
+# expire user passwords
+chpasswd:
+  expire: false
+  list:
+  - pi:pi
+
+# Enable password authentication with the SSH daemon
+ssh_pwauth: true
+
+## On first boot, use ssh-import-id to give the specific users SSH access to
+## the default user
+ssh_import_id:
+#- lp:my_launchpad_username
+- gh:bunchc
+
+## Add users and groups to the system, and import keys with the ssh-import-id
+## utility
+#groups:
+#- robot: [robot]
+#- robotics: [robot]
+#- pi
+#
+users:
+  - default
+  - name: bunchc
+    gecos: "bunchc"
+    groups: users, admin, sudoers
+    plain_text_passwd: raspberry
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    lock_passwd: false
+    ssh_pwauth: true
+    chpasswd: { expire: false }
+  - name: pi
+    gecos: "DefaultUser"
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    groups: users,docker,video
+    plain_text_passwd: raspberry
+    lock_passwd: false
+    ssh_pwauth: true
+    chpasswd: { expire: false }
+
+## Update apt database and upgrade packages on first boot
+package_update: true
+package_upgrade: true
+
+# Resize the root FS
+resize_rootfs: true
+growpart:
+  mode: auto
+  devices: ["/"]
+  ignore_growroot_disabled: false
+
+## Install additional packages on first boot
+packages:
+- vim
+- git
+- wget
+- curl
+
+# Set locale & TZ
+locale: "en_US.UTF-8"
+timezone: "America/Chicago"

@@ -1,0 +1,61 @@
+---
+- name: Build cloud-init package
+  hosts: localhost
+  become: true
+  gather_facts: false
+  become_method: sudo
+  serial: 1
+  vars_files:
+    - vars/all.yml
+  tasks:
+    - name: Clone Repo
+      git:
+        repo: "{{ vib_repo }}"
+        dest: "{{ vib_repo_dir }}"
+
+    - name: Create payload folder
+      file:
+        path: "{{vib_payload_dir}}"
+        state: directory
+
+    - name: Create dist folder
+      file:
+        path: "{{vib_dist_dir}}"
+        state: directory
+
+    - name: Run script to build cloud-init
+      script: "/scripts/build-cloud-init.sh"
+      args:
+        chdir: "{{vib_repo_dir}}"
+      environment:
+        PAYLOAD_DIR: "{{ vib_payload_dir }}opt/"
+        REPO_DIR: "{{ vib_repo_dir }}"
+        PAYLOAD_ROOT: "{{ vib_payload_root }}"
+        CLOUDINIT_REPO: "{{ vib_repo }}"
+        PYTHON_VER: "{{ vib_python_ver }}"
+
+    - name: Creating config location
+      file:
+        path: "{{ vib_payload_dir }}opt/etc/cloud/"
+        state: directory
+
+    - name: Creating cloud.cfg
+      template:
+        src: templates/cloud.cfg.j2
+        dest: "{{ vib_payload_dir }}opt/etc/cloud/cloud.cfg"
+        owner: root
+        group: root
+        mode: '0444'
+
+    - name: Creating alterantive file paths
+      file:
+        path: "{{ vib_payload_dir }}opt/var/lib/cloud/seed/nocloud/"
+        state: directory
+
+    - name: Copying NoCloud Data files
+      template:
+        src: "templates/{{ item }}.j2"
+        dest: "{{ vib_payload_dir }}opt/var/lib/cloud/seed/nocloud/{{ item }}"
+      with_items:
+        - user-data
+        - meta-data

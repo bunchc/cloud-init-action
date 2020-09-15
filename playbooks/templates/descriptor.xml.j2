@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<vib version="{{ vib_version }}">
+   <type>{{ vib_type }}</type>
+   <name>{{ vib_name }}</name>
+
+   <version>{{ vib_pkgversion }}</version>
+
+   <vendor>{{ vib_vendor }}</vendor>
+
+   <summary>{{ vib_summary }}</summary>
+
+   <description>{{ vib_description }}</description>
+   <release-date>{{ ansible_date_time.iso8601_micro }}</release-date>
+
+   {% if vib_urls is defined and vib_urls != "" %}
+   <urls>
+      {% for url in vib_urls %}
+      <url key="{{ url.name }}">{{ url.url }}</url>
+      {% endfor %}
+   </urls>
+   {% else %}
+   <urls/>
+   {% endif %}
+   <relationships>
+      {% if vib_depends is defined and vib_depends != "" %}
+      <depends>
+         {% for depends in vib_depends %}
+         {{ depends }}
+         {% endfor %}
+      </depends>
+      {% else %}
+      <depends/>
+      {% endif %}
+
+      {% if vib_conflicts is defined and vib_conflicts != "" %}
+      <conflicts>
+         {% for conflict in vib_conflicts %}
+         {{ conflict }}
+         {% endfor %}
+      </conflicts>
+      {% else %}
+      <conflicts/>
+      {% endif %}
+
+      {% if vib_replaces is defined and vib_replaces != "" %}
+      <conflicts>
+         {% for replacement in vib_replaces %}
+         {{ replacement }}
+         {% endfor %}
+      </replaces>
+      {% else %}
+      <replaces/>
+      {% endif %}
+
+      {% if vib_provides is defined and vib_provides != "" %}
+      <conflicts>
+         {% for provides in vib_provides %}
+         {{ provides }}
+         {% endfor %}
+      </provides>
+      {% else %}
+      <provides/>
+      {% endif %}
+
+      <compatibleWith />
+   </relationships>
+
+   <software-tags />
+
+   <system-requires>
+      {% if vib_maintenancemode is defined and vib_maintenancemode is sameas true %}
+      <maintenance-mode>true</maintenance-mode>
+      {% else %}
+      <maintenance-mode>false</maintenance-mode>
+      {% endif %}
+   </system-requires>
+   <file-list>
+      {% for file in filelist['files'] %}
+      <file>{{ file.path | replace(vib_payload_dir, "") }}</file>
+      {% endfor %}
+   </file-list>
+
+   {% if vib_acceptance is defined and vib_acceptance|length %}
+   <acceptance-level>{{ vib_acceptance }}</acceptance-level>
+   {% else %}
+   <acceptance-level>community</acceptance-level>
+   {% endif %}
+   
+   {% if vib_live is defined and vib_live is sameas true %}
+   <live-install-allowed>true</live-install-allowed>
+   {% else %}
+   <live-install-allowed>false</live-install-allowed>
+   {% endif %}
+
+   {% if vib_remove is defined and vib_remove is sameas true %}
+   <live-remove-allowed>true</live-remove-allowed>
+   {% else %}
+   <live-remove-allowed>false</live-remove-allowed>
+   {% endif %}
+
+   {% if vib_cimomrestart is defined and vib_cimomrestart is sameas true %}
+   <cimom-restart>true</cimom-restart>
+   {% else %}
+   <cimom-restart>false</cimom-restart>
+   {% endif %}
+
+   {% if vib_stateless is defined and vib_stateless is sameas true %}
+   <stateless-ready>true</stateless-ready>
+   {% else %}
+   <stateless-ready>false</stateless-ready>
+   {% endif %}
+
+   {% if vib_overlay is defined and vib_overlay is sameas true %}
+   <overlay>true</overlay>
+   {% else %}
+   <overlay>false</overlay>
+   {% endif %}
+   <payloads>
+      <payload name="{{ vib_payload }}" type="tgz" size="{{ vib_sha256['stat']['size'] }}">
+         <checksum checksum-type="sha-256">{{ vib_sha256['stat']['checksum'] }}</checksum>
+         <checksum checksum-type="sha-1" verify-process="gunzip">{{ vib_sha1['stat']['checksum'] }}</checksum>
+      </payload>
+   </payloads>
+</vib>

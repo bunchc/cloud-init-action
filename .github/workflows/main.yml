@@ -1,0 +1,15 @@
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build cloud-init
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build cloud-init
+      id: build-step
+      uses: bunchc/cloud-init-action@v1
+    - uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: path/to/artifact/ # or path/to/artifact
