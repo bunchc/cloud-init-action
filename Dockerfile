@@ -14,6 +14,8 @@ RUN rpm --rebuilddb \
     && yum -y install ansible \
     && yum clean all
 
+COPY entrypoint.sh /entrypoint.sh
 COPY playbooks/ /playbooks
 COPY scripts/ /scripts
 CMD ["/bin/bash"]
+ENTRYPOINT ["/entrypoint.sh"]

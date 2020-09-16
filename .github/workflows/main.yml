@@ -11,5 +11,5 @@ jobs:
       uses: bunchc/cloud-init-action@v1
     - uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
-        path: path/to/artifact/ # or path/to/artifact
+        name: cloud-init-artifact
+        path: /tmp/payloads/cloud-init

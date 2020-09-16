@@ -10,9 +10,13 @@ Git repository for cloud-init. Default: "https://github.com/canonical/cloud-init
 
 ## Outputs
 
-### TODO
+### `starttime`
 
-A packaged vib file.
+Timestamp from beginning of Ansible run.
+
+### `endtime`
+
+Timestamp from end of Ansible run.
 
 ## Example usage
 
