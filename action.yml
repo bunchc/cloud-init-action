@@ -1,0 +1,18 @@
+# action.yml
+name: 'Build cloud-init'
+description: 'Builds cloud-init from source'
+inputs:
+  cloud-init-repo:  # id of input
+    description: 'cloud-init source repository'
+    required: true
+    default: 'https://github.com/canonical/cloud-init.git'
+outputs:
+  starttime:
+    description: 'The time ansible-playbook started.'
+  endtime:
+    description: 'The time ansible-playbook finished.'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.cloud-init-repo }}
