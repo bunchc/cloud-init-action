@@ -4,10 +4,10 @@
 
 pkg_name: "cloud-init"
 repo: "https://github.com/canonical/cloud-init.git"
-repo_dir: "/tmp/{{ pkg_name }}"
-dist_dir: "/tmp/dist/"
+repo_dir: "{{ pkg_name }}"
+dist_dir: "dist"
 payload: "{{ pkg_name }}"
-payload_root: "/tmp/payloads"
+payload_root: "payloads"
 payload_dir: "{{payload_root}}/{{payload}}/"
 python_ver: "3.5.7"
 virtualenv: "esxicloudinit"
