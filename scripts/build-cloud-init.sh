@@ -6,7 +6,7 @@
 
 #VIB_DESC_FILE=${CLOUDINIT_TEMP_DIR}/descriptor.xml
 PAYLOAD_ROOT="${PAYLOAD_ROOT:-/tmp/payloads}"
-PAYLOAD_DIR="${PAYLOAD_DIR:-${VIB_PAYLOAD_ROOT}/cloudInit}"
+PAYLOAD_DIR="${PAYLOAD_DIR:-${PAYLOAD_ROOT}/cloudInit}"
 REPO_DIR="${REPO_DIR:-/tmp/cloudinit}"
 REPO="${CLOUDINIT_REPO:-'https://github.com/canonical/cloud-init.git'}"
 PYTHON_VER="${PYTHON_VER:-3.5.7}"
