@@ -6,7 +6,7 @@ jobs:
     name: Build cloud-init
     container:
       image: 'docker://bunchc/cloud-init-action'
-      volume:
+      volumes:
         - /workspace:/workspace
     steps:
     - name: Build cloud-init
