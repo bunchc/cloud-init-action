@@ -4,6 +4,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Build cloud-init
+    container:
+      image: 'docker://bunchc/cloud-init-action'
+      volume:
+        - /workspace:/workspace
     steps:
     - name: Build cloud-init
       id: build-step
@@ -11,4 +15,4 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: cloud-init-artifact
-        path: payloads/cloud-init/
+        path: /workspace
