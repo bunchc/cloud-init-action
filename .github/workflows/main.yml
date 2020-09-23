@@ -13,4 +13,4 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: cloud-init-artifact
-        path: /github/workspace
+        path: /home/runner/work/cloud-init-action/cloud-init-action
