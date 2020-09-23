@@ -5,11 +5,17 @@
 # build-cloud-init.sh - Builds and installs cloud-init from source into a venv
 
 #VIB_DESC_FILE=${CLOUDINIT_TEMP_DIR}/descriptor.xml
+PAYLOAD="${PAYLOAD:-/cloudInit}"
 PAYLOAD_ROOT="${PAYLOAD_ROOT:-/tmp/payloads}"
-PAYLOAD_DIR="${PAYLOAD_DIR:-${PAYLOAD_ROOT}/cloudInit}"
+PAYLOAD_DIR="${PAYLOAD_DIR:-${PAYLOAD_ROOT}${PAYLOAD}}"
 REPO_DIR="${REPO_DIR:-/tmp/cloudinit}"
 REPO="${CLOUDINIT_REPO:-'https://github.com/canonical/cloud-init.git'}"
 PYTHON_VER="${PYTHON_VER:-3.5.7}"
+
+echo "***********************"
+echo $(env)
+echo "***********************"
+
 
 # Create cloud-init temp dir
 #mkdir -p ${CLOUDINIT_TEMP_DIR}
@@ -42,9 +48,18 @@ export PYENV_VERSION=${PYTHON_VER}
 #
 ## Create venv
 #
-cd ${PAYLOAD_ROOT}
-python3 -m venv cloudInit
-cd ${PAYLOAD_DIR}
+pushd ${PAYLOAD_ROOT}
+echo "***********************"
+echo $(pwd)
+echo "***********************"
+
+python3 -m venv ${PAYLOAD}
+
+pushd ${PAYLOAD_DIR}
+echo "***********************"
+echo $(pwd)
+echo "***********************"
+
 source bin/activate
 #
 ## Upgrade pip and poetry

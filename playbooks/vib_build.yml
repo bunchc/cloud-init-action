@@ -28,6 +28,7 @@
       args:
         chdir: "{{repo_dir}}"
       environment:
+        PAYLOAD: "{{ payload }}"
         PAYLOAD_DIR: "{{ payload_dir }}opt/"
         REPO_DIR: "{{ repo_dir }}"
         PAYLOAD_ROOT: "{{ payload_root }}"
