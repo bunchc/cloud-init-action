@@ -4,7 +4,7 @@
 
 pkg_name: "cloud-init"
 repo: "https://github.com/canonical/cloud-init.git"
-gh_action_prefix: "/workspace"
+gh_action_prefix: "/github/workspace"
 repo_dir: "{{ gh_action_prefix }}/{{ pkg_name }}"
 dist_dir: "{{ gh_action_prefix }}/dist"
 payload: "{{ pkg_name }}"

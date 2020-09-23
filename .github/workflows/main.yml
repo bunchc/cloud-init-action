@@ -6,8 +6,6 @@ jobs:
     name: Build cloud-init
     container:
       image: 'docker://bunchc/cloud-init-action'
-      volumes:
-        - /workspace:/workspace
     steps:
     - name: Build cloud-init
       id: build-step
@@ -15,4 +13,4 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: cloud-init-artifact
-        path: /workspace
+        path: /github/workspace
