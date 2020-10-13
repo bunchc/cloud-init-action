@@ -10,7 +10,10 @@ jobs:
     - name: Build cloud-init
       id: build-step
       uses: bunchc/cloud-init-action@v2
-    - uses: actions/upload-artifact@v2
+    - name: List files in /home/runner/work/cloud-init-action/
+      run: ls -lasht /home/runner/work/cloud-init-action/
+    - name: Upload VIB
+      uses: actions/upload-artifact@v2
       with:
         name: cloud-init-artifact
         path: /home/runner/work/cloud-init-action/*.vib
