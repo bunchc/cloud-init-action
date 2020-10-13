@@ -60,3 +60,49 @@
       with_items:
         - user-data
         - meta-data
+
+    - name: Creating file list
+      find:
+        paths: "{{ payload_dir }}"
+        recurse: yes
+      register: filelist
+
+    - name: Creating tar file
+      archive:
+        path: "{{ payload_dir }}"
+        dest: "{{ payload_dir }}oem.tar"
+        format: tar
+
+    - name: Generating sha1 checksum of new tarfile
+      stat:
+        path: "{{ payload_dir }}oem.tar"
+        get_checksum: yes
+        checksum_algorithm: sha1
+      register: vib_sha1
+
+    - name: Compressing tarfile
+      archive:
+        path: "{{ payload_dir }}oem.tar"
+        dest: "{{ payload_dir }}{{ payload }}"
+        format: gz
+
+    - name: Generating sha256 checksum of new gzip file
+      stat:
+        path: "{{ payload_dir }}{{ payload }}"
+        get_checksum: yes
+        checksum_algorithm: sha256
+      register: vib_sha256
+
+    - name: Build descriptor.xml
+      template:
+        src: templates/descriptor.xml.j2
+        dest: "{{ payload }}descriptor.xml"
+
+    - name: Create empty sig file
+      file:
+        path: "{{ payload_dir }}sig.pkcs7"
+        state: touch
+
+    - name: Build VIB archive
+      shell:
+        cmd: "ar qDv {{ dist_dir }}{{ payload }}_$(date +%Y-%m-%d_%H%M).vib {{ payload_dir }}descriptor.xml {{ payload_dir }}sig.pkcs7 {{ payload_dir }}{{ payload }}"
