@@ -10,10 +10,8 @@ jobs:
     - name: Build cloud-init
       id: build-step
       uses: bunchc/cloud-init-action@v2
-    - name: List files in ${{ github.workspace }}
-      run: ls -lasht ${{ github.workspace }}
     - name: Upload VIB
       uses: actions/upload-artifact@v2
       with:
         name: cloud-init-artifact
-        path: ${{ github.workspace }}/*.vib
+        path: ${{ github.workspace }}/dist/*.vib

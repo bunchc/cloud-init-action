@@ -13,3 +13,59 @@ payload_dir: "{{ payload_root }}/{{ payload }}/"
 python_ver: "3.5.7"
 virtualenv: "esxicloudinit"
 pyenv_root: "~/.pyenv"
+
+vib_version: "5.0"
+vib_type: "bootbank"
+# The VIB package name must be 35 or less characters and must
+# only contain [0-9a-zA-Z], -, _, and . Also it is advised
+# that vendor be left out as there is a separate vendor field.
+vib_pkgname: "cloud-init"
+vib_payload: "{{ vib_pkgname }}"
+
+# The VIB version should be of the form: ver-rel, where
+# ver and rel are both strings that must start with digits,
+# and can end with a combination of digits, period, and letters.
+# The entire string should be 35 chars or less.
+vib_pkgversion: "0.0.1-0.0.0"
+
+# Vendor has the same formatting restrictions as name field
+vib_vendor: "Rackspace"
+
+# A one-line summary of the VIB package contents. 80 chars max.
+vib_summary: "cloud-init for ESXi 6.7"
+vib_description: '{{ vib_summary }}'
+
+# Used for specifying KB article URLs. name is a short friendly
+# identifier, no more than 20 characters long, to display instead
+# of or alongside the URL.
+vib_urls:
+  - name: cloud-init
+    url: https://cloud-init.io/
+  - name: cloud-init github
+    url: https://github.com/canonical/cloud-init
+
+# VIB acceptance level. Should be one of: 
+# certified / accepted / partner / community
+vib_acceptance: "certified"
+
+# Default is false
+vib_live: true
+
+# Both live install and live removes must be true for a live upgrade
+vib_remove: true
+
+# Restart cimom after installation or removal of this VIB. Applies only
+# to live installation. Should be set to True for plugins that require
+# cimom to be restarted for activation, such as CIM provider. Defaults to
+# false.
+vib_cimomrestart: false
+
+# Mark this VIB as stateless ready - meaning that this VIB can be booted
+# from a stateless host and its configuration has a host profiles plugin.
+# Defaults to false.
+vib_stateless: true
+
+# This VIB overlays files of other VIBs.
+# Note that the use of overlays must be approved by VMware via
+# the certification or acceptance programs.
+vib_overlay: false

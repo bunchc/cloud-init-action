@@ -76,7 +76,7 @@
    </system-requires>
    <file-list>
       {% for file in filelist['files'] %}
-      <file>{{ file.path | replace(vib_payload_dir, "") }}</file>
+      <file>{{ file.path | replace(payload_dir, "") }}</file>
       {% endfor %}
    </file-list>
 
