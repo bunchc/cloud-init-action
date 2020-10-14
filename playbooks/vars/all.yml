@@ -14,12 +14,13 @@ python_ver: "3.5.7"
 virtualenv: "esxicloudinit"
 pyenv_root: "~/.pyenv"
 
+vib_name: "{{ pkg_name }}"
 vib_version: "5.0"
 vib_type: "bootbank"
 # The VIB package name must be 35 or less characters and must
 # only contain [0-9a-zA-Z], -, _, and . Also it is advised
 # that vendor be left out as there is a separate vendor field.
-vib_pkgname: "cloud-init"
+vib_pkgname: "{{ pkg_name }}"
 vib_payload: "{{ vib_pkgname }}"
 
 # The VIB version should be of the form: ver-rel, where
