@@ -115,3 +115,7 @@
     - name: Build VIB archive
       shell:
         cmd: "ar qDv {{ dist_dir }}{{ payload }}_$(date +%Y-%m-%d_%H%M).vib {{ payload_dir }}descriptor.xml {{ payload_dir }}sig.pkcs7 {{ payload_dir }}{{ payload }}"
+
+    - name: Print location of vib file
+      debug:
+        msg: "{{ dist_dir }}{{ payload }}_$(date +%Y-%m-%d_%H%M).vib"
