@@ -114,16 +114,25 @@
 
     - name: Build VIB archive
       shell:
-        cmd: "ar qDv {{ payload }}_$(date +%Y-%m-%d_%H%M).vib {{ payload_dir }}descriptor.xml {{ payload_dir }}sig.pkcs7 {{ payload_dir }}{{ payload }}"
+        cmd: "ar qDv {{ gh_action_prefix }}/{{ payload }}_$(date +%Y-%m-%d_%H%M).vib {{ payload_dir }}descriptor.xml {{ payload_dir }}sig.pkcs7 {{ payload_dir }}{{ payload }}"
 
-    - name: Print location of vib file
-      debug:
-        msg: "{{ payload }}_$(date +%Y-%m-%d_%H%M).vib"
+    - name: "[Debug] Locate VIB File"
+      find:
+        paths: "{{ gh_action_prefix }}"
+        patterns: "*.vib"
+      register: vib_location
       when: >
         vib_debug is defined and
         vib_debug
 
-    - name: Print Datetime
+    - name: "[Debug] Print location of vib file"
+      debug:
+        msg: "{{ vib_location }}"
+      when: >
+        vib_debug is defined and
+        vib_debug
+
+    - name: "[Debug] Print Datetime"
       debug:
         msg: "Date: {{ansible_date_time.iso8601_micro}}"
       when: >

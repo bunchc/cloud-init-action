@@ -1,6 +1,6 @@
 ---
 # vars for vib building
-#vib_debug: true
+vib_debug: true
 
 pkg_name: "cloud-init"
 repo: "https://github.com/canonical/cloud-init.git"
