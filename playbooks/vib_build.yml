@@ -61,6 +61,15 @@
         - user-data
         - meta-data
 
+- name: Build vib package
+  hosts: localhost
+  become: true
+  gather_facts: true
+  become_method: sudo
+  serial: 1
+  vars_files:
+    - vars/all.yml
+  tasks:
     - name: Creating file list
       find:
         paths: "{{ payload_dir }}"
