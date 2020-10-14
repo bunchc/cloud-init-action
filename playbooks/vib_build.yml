@@ -105,7 +105,7 @@
     - name: Build descriptor.xml
       template:
         src: templates/descriptor.xml.j2
-        dest: "{{ payload }}descriptor.xml"
+        dest: "{{ payload_dir }}descriptor.xml"
 
     - name: Create empty sig file
       file:
