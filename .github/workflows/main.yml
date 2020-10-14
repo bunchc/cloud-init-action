@@ -14,4 +14,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: cloud-init-artifact
-        path: ${{ github.workspace }}/dist/*.vib
+        path: ${{ github.workspace }}/*.vib
