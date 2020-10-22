@@ -38,7 +38,6 @@ jobs:
     steps:
       - name: Create OnMetal Server
         uses: 'bunchc/ironic_factory@v1'
-        working-directory: /ansible
         with:
           playbook: /ansible/create.yml
       - name: Store ansible inventory
@@ -61,4 +60,4 @@ jobs:
       - name: Destroy the OnMetal Device
         uses: 'bunchc/ironic_factory@v1'
         with:
-          playbook: destroy.yml
+          playbook: /ansible/destroy.yml
