@@ -1,17 +1,60 @@
+---
+name: Build ESXi Image with Cloud-Init
 on: [push]
 
+# Set rax api stuff globally
+env:
+  RACKSPACE_API_TOKEN: ${{ secrets.RACKSPACE_API_TOKEN }}
+  RACKSPACE_USERNAME: ${{ secrets.RACKSPACE_USERNAME }}
+  RACKSPACE_REGION: ${{ secrets.RACKSPACE_REGION }}
+  RACKSPACE_SSH_PUB_KEY: ${{ secrets.RACKSPACE_SSH_PUB_KEY }}
+  RACKSPACE_TENANT_ID: ${{ RACKSPACE_TENANT_ID }}
+
+
 jobs:
-  build:
+  # Build cloud-init and package into a vib
+  build_vib:
     runs-on: ubuntu-latest
-    name: Build cloud-init
     container:
       image: 'docker://bunchc/cloud-init-action'
+    name: Build cloud-init
     steps:
-    - name: Build cloud-init
-      id: build-step
-      uses: bunchc/cloud-init-action@v2
-    - name: Upload VIB
-      uses: actions/upload-artifact@v2
-      with:
-        name: cloud-init-artifact
-        path: ${{ github.workspace }}/*.vib
+      - name: Build cloud-init
+        id: build-step
+        uses: bunchc/cloud-init-action@v2
+      - name: Upload VIB
+        uses: actions/upload-artifact@v2
+        with:
+          name: cloud-init-vib
+          path: ${{ github.workspace }}/*.vib
+
+  # Build an OnMetal server
+  build_packer_server:
+    runs-on: ubuntu-latest
+    container:
+      image: 'docker://bunchc/ironic-factory'
+    name: Build Packer Build Server
+    steps:
+      - name: Create OnMetal Server
+        uses: 'bunchc/ironic_factory@v1'
+        with:
+          playbook: create.yml
+      - name: Store ansible inventory
+        with:
+          name: inventory
+          path: |
+            ${{ github.workspace }}/ansible/inventory
+            ${{ github.workspace }}/ansible/.hosts
+
+  # Destroy the server
+  destroy_device:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    container:
+      image: 'docker://bunchc/ironic-factory'
+    name: Destroy OnMetal Device
+    steps:
+      - name: Destroy the OnMetal Device
+        uses: 'bunchc/ironic_factory@v1'
+        with:
+          playbook: destroy.yml
