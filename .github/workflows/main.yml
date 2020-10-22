@@ -38,8 +38,9 @@ jobs:
     steps:
       - name: Create OnMetal Server
         uses: 'bunchc/ironic_factory@v1'
+        working-directory: /ansible
         with:
-          playbook: ansible/create.yml
+          playbook: /ansible/create.yml
       - name: Store ansible inventory
         uses: actions/upload-artifact@v2
         with:
