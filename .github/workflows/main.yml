@@ -30,6 +30,7 @@ jobs:
 
   # Build an OnMetal server
   build_packer_server:
+    needs: build_vib
     runs-on: ubuntu-latest
     container:
       image: 'docker://bunchc/ironic-factory'
@@ -38,7 +39,7 @@ jobs:
       - name: Create OnMetal Server
         uses: 'bunchc/ironic_factory@v1'
         with:
-          playbook: create.yml
+          playbook: ansible/create.yml
       - name: Store ansible inventory
         uses: actions/upload-artifact@v2
         with:
@@ -49,6 +50,7 @@ jobs:
 
   # Destroy the server
   destroy_device:
+    needs: build_packer_server
     if: ${{ always() }}
     runs-on: ubuntu-latest
     container:
