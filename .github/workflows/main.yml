@@ -40,6 +40,7 @@ jobs:
         with:
           playbook: create.yml
       - name: Store ansible inventory
+        uses: actions/upload-artifact@v2
         with:
           name: inventory
           path: |
