@@ -30,7 +30,7 @@ jobs:
 
   # Build an OnMetal server
   build_packer_server:
-    needs: build_vib
+    # needs: build_vib
     runs-on: ubuntu-latest
     container:
       image: 'docker://bunchc/ironic-factory'
