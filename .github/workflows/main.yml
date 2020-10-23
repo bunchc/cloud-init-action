@@ -47,8 +47,27 @@ jobs:
         with:
           name: inventory
           path: |
-            ${{ github.workspace }}/ansible/inventory
-            ${{ github.workspace }}/ansible/.hosts
+            ${{ github.workspace }}/inventory
+            ${{ github.workspace }}/.hosts
+
+
+  provision_packer_server:
+    needs: build_packer_server
+    runs-on: ubuntu-latest
+    container:
+      image: 'docker://bunchc/ironic-factory'
+    name: Provision Packer Build Server
+    steps:
+      - name: Download inventory files
+        uses: actions/download-artifact@v2
+        with: 
+          name: inventory
+      - name: Run Ansible provisioning
+        uses: 'bunchc/ironic-factory@v2'
+        with:
+          inventory: '${GITHUB_WORKSPACE}/inventory'
+          playbook: '/ansible/provision.yml'
+
 
   # Destroy the server
   destroy_device:
