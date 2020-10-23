@@ -63,7 +63,7 @@ jobs:
         with: 
           name: inventory
       - name: Run Ansible provisioning
-        uses: 'bunchc/ironic-factory@v2'
+        uses: 'bunchc/ironic-factory@v1'
         with:
           inventory: '${GITHUB_WORKSPACE}/inventory'
           playbook: '/ansible/provision.yml'
