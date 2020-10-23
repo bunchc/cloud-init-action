@@ -59,6 +59,10 @@ jobs:
       image: 'docker://bunchc/ironic-factory'
     name: Destroy OnMetal Device
     steps:
+      - name: Download inventory files
+        uses: actions/download-artifact@v2
+        with: 
+          name: inventory
       - name: Destroy the OnMetal Device
         uses: 'bunchc/ironic_factory@v1'
         with:
