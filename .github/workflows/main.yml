@@ -39,7 +39,7 @@ jobs:
       image: 'docker://bunchc/ironic-factory'
     steps:
       - name: Create OnMetal Server
-        uses: 'bunchc/ironic_factory@v1'
+        uses: 'bunchc/ironic_factory@v2'
         with:
           playbook: /ansible/create.yml
       - name: Store ansible inventory
@@ -68,7 +68,7 @@ jobs:
         run: ls -R
         working-directory: ${{ github.workspace }}/
       - name: Run Ansible provisioning
-        uses: 'bunchc/ironic_factory@v1'
+        uses: 'bunchc/ironic_factory@v2'
         with:
           inventory: '${GITHUB_WORKSPACE}/inventory'
           playbook: '/ansible/provision.yml'
@@ -107,6 +107,6 @@ jobs:
         with: 
           name: inventory
       - name: Destroy the OnMetal Device
-        uses: 'bunchc/ironic_factory@v1'
+        uses: 'bunchc/ironic_factory@v2'
         with:
           playbook: /ansible/run-packer.yml
