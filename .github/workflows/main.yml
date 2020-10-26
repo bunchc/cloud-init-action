@@ -67,11 +67,15 @@ jobs:
       - name: Display structure of downloaded inventory
         run: ls -R
         working-directory: ${{ github.workspace }}/
+      - name: Display ENV as container sees it
+        uses: docker://alpine:3.8
+        with:
+          entrypoint: /usr/bin/env
       - name: Display GITHUB_WORKSPACE
         uses: docker://alpine:3.8
         with:
           entrypoint: /bin/echo
-          args: "${GITHUB_WORKSPACE}"
+          args: "${{ github.workspace }}"
       - name: Run Ansible provisioning
         uses: 'bunchc/ironic_factory@v2'
         with:
