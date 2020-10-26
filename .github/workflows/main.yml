@@ -30,13 +30,13 @@ jobs:
           name: cloud-init-vib
           path: ${{ github.workspace }}/*.vib
 
+
   # Build an OnMetal server
   build_packer_server:
-    # needs: build_vib
+    name: Build Packer Build Server
     runs-on: ubuntu-latest
     container:
       image: 'docker://bunchc/ironic-factory'
-    name: Build Packer Build Server
     steps:
       - name: Create OnMetal Server
         uses: 'bunchc/ironic_factory@v1'
@@ -51,12 +51,36 @@ jobs:
             ${{ github.workspace }}/.hosts
 
 
+  # Use ansible to install and configure libvirt, kvm, and packer
   provision_packer_server:
+    name: Provision Packer Build Server
     needs: build_packer_server
     runs-on: ubuntu-latest
     container:
       image: 'docker://bunchc/ironic-factory'
-    name: Provision Packer Build Server
+    steps:
+      - name: Download inventory files
+        uses: actions/download-artifact@v2
+        with: 
+          name: inventory
+          path: ${{ github.workspace }}/
+      - name: Display structure of downloaded inventory
+        run: ls -R
+        working-directory: ${{ github.workspace }}/
+      - name: Run Ansible provisioning
+        uses: 'bunchc/ironic_factory@v1'
+        with:
+          inventory: '${GITHUB_WORKSPACE}/inventory'
+          playbook: '/ansible/provision.yml'
+
+
+  # Use ansible to run packer builds
+  run_packer_builds:
+    name: Run Packer Builds
+    needs: provision_packer_server
+    runs-on: ubuntu-latest
+    container:
+      image: 'docker://bunchc/ironic-factory'
     steps:
       - name: Download inventory files
         uses: actions/download-artifact@v2
@@ -71,12 +95,12 @@ jobs:
 
   # Destroy the server
   destroy_device:
+    name: Destroy OnMetal Device
     needs: build_packer_server
-    if: ${{ always() }}
     runs-on: ubuntu-latest
     container:
       image: 'docker://bunchc/ironic-factory'
-    name: Destroy OnMetal Device
+    if: ${{ always() }}
     steps:
       - name: Download inventory files
         uses: actions/download-artifact@v2
@@ -85,4 +109,4 @@ jobs:
       - name: Destroy the OnMetal Device
         uses: 'bunchc/ironic_factory@v1'
         with:
-          playbook: /ansible/destroy.yml
+          playbook: /ansible/run-packer.yml
