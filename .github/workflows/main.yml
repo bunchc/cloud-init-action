@@ -67,6 +67,8 @@ jobs:
       - name: Display structure of downloaded inventory
         run: ls -R
         working-directory: ${{ github.workspace }}/
+      - name: Display GITHUB_WORKSPACE
+        run: echo '${GITHUB_WORKSPACE}'
       - name: Run Ansible provisioning
         uses: 'bunchc/ironic_factory@v2'
         with:
