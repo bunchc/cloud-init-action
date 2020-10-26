@@ -41,7 +41,7 @@ jobs:
       - name: Create OnMetal Server
         uses: 'bunchc/ironic_factory@v2'
         with:
-          playbook: /ansible/create.yml
+          playbook: '-vvv /ansible/create.yml'
       - name: Store ansible inventory
         uses: actions/upload-artifact@v2
         with:
