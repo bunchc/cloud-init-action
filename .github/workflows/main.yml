@@ -63,7 +63,7 @@ jobs:
           name: inventory
       - name: Run Ansible provisioning
         env:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         uses: 'bunchc/ironic_factory@v3'
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
