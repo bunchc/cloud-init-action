@@ -42,7 +42,7 @@ jobs:
         uses: 'bunchc/ironic_factory@v3'
         with:
           playbook: "/ansible/create.yml"
-          verbosity: "-vvv"
+          verbosity: "-v"
       - name: Store ansible inventory
         uses: actions/upload-artifact@v2
         with:
