@@ -39,9 +39,10 @@ jobs:
       image: 'docker://bunchc/ironic-factory'
     steps:
       - name: Create OnMetal Server
-        uses: 'bunchc/ironic_factory@v2'
+        uses: 'bunchc/ironic_factory@v3'
         with:
-          playbook: '-vvv /ansible/create.yml'
+          playbook: "/ansible/create.yml"
+          verbosity: "-vvv"
       - name: Store ansible inventory
         uses: actions/upload-artifact@v2
         with:
@@ -75,12 +76,13 @@ jobs:
         uses: docker://alpine:3.8
         with:
           entrypoint: /bin/ls
-          args: "-R ${GITHUB_WORKSPACE}"
+          args: "-R /github/workspace"
       - name: Run Ansible provisioning
-        uses: 'bunchc/ironic_factory@v2'
+        uses: 'bunchc/ironic_factory@v3'
         with:
           inventory: "${{ github.workspace }}/inventory"
           playbook: "/ansible/provision.yml"
+          verbosity: "-vvv"
 
 
   # Use ansible to run packer builds
@@ -96,16 +98,18 @@ jobs:
         with: 
           name: inventory
       - name: Run Ansible provisioning
-        uses: 'bunchc/ironic_factory@v2'
+        uses: 'bunchc/ironic_factory@v3'
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
           playbook: "/ansible/run-packer.yml"
+          verbosity: "-vvv"
 
 
   # Destroy the server
   destroy_device:
     name: Destroy OnMetal Device
-    needs: build_packer_server
+    needs: provision_packer_server
+    #needs: build_packer_server
     runs-on: ubuntu-latest
     container:
       image: 'docker://bunchc/ironic-factory'
