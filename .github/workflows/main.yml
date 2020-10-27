@@ -42,7 +42,6 @@ jobs:
         uses: 'bunchc/ironic_factory@v3'
         with:
           playbook: "/ansible/create.yml"
-          verbosity: "-v"
       - name: Store ansible inventory
         uses: actions/upload-artifact@v2
         with:
@@ -64,14 +63,9 @@ jobs:
         uses: actions/download-artifact@v2
         with: 
           name: inventory
-          path: ${{ github.workspace }}/
       - name: Display structure of downloaded inventory
         run: ls -R
         working-directory: ${{ github.workspace }}/
-      - name: Display ENV as container sees it
-        uses: docker://alpine:3.8
-        with:
-          entrypoint: /usr/bin/env
       - name: Display GITHUB_WORKSPACE
         uses: docker://alpine:3.8
         with:
