@@ -74,8 +74,8 @@ jobs:
       - name: Display GITHUB_WORKSPACE
         uses: docker://alpine:3.8
         with:
-          entrypoint: /bin/echo
-          args: "${{ github.workspace }}"
+          entrypoint: /bin/ls
+          args: "-R ${{ github.workspace }}"
       - name: Run Ansible provisioning
         uses: 'bunchc/ironic_factory@v2'
         with:
