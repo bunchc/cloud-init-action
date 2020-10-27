@@ -63,6 +63,7 @@ jobs:
         uses: actions/download-artifact@v2
         with: 
           name: inventory
+          path: ${{ github.workspace }}/inventory
       - name: Display structure of downloaded inventory
         run: ls -R
         working-directory: ${{ github.workspace }}/
