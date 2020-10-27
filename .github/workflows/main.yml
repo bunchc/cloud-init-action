@@ -75,12 +75,12 @@ jobs:
         uses: docker://alpine:3.8
         with:
           entrypoint: /bin/ls
-          args: "-R ${{ github.workspace }}"
+          args: "-R ${GITHUB_WORKSPACE}"
       - name: Run Ansible provisioning
         uses: 'bunchc/ironic_factory@v2'
         with:
-          inventory: '${GITHUB_WORKSPACE}/inventory'
-          playbook: '/ansible/provision.yml'
+          inventory: "${{ github.workspace }}/inventory"
+          playbook: "/ansible/provision.yml"
 
 
   # Use ansible to run packer builds
@@ -96,10 +96,10 @@ jobs:
         with: 
           name: inventory
       - name: Run Ansible provisioning
-        uses: 'bunchc/ironic_factory@v1'
+        uses: 'bunchc/ironic_factory@v2'
         with:
-          inventory: '${GITHUB_WORKSPACE}/inventory'
-          playbook: '/ansible/provision.yml'
+          inventory: "${GITHUB_WORKSPACE}/inventory"
+          playbook: "/ansible/run-packer.yml"
 
 
   # Destroy the server
