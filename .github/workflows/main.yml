@@ -57,17 +57,13 @@ jobs:
     container:
       image: 'docker://bunchc/ironic-factory'
     steps:
-      - name: Add SSH Key
-        uses: webfactory/ssh-agent@v0.4.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Download inventory files
         uses: actions/download-artifact@v2
         with: 
           name: inventory
-      - name: Display structure of downloaded inventory
-        run: cat ${GITHUB_WORKSPACE}/inventory
       - name: Run Ansible provisioning
+        env:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
         uses: 'bunchc/ironic_factory@v3'
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
