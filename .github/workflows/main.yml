@@ -57,6 +57,10 @@ jobs:
     container:
       image: 'docker://bunchc/ironic-factory'
     steps:
+      - name: Add SSH Key
+        uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Download inventory files
         uses: actions/download-artifact@v2
         with: 
