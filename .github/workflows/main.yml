@@ -68,7 +68,7 @@ jobs:
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
           playbook: "/ansible/provision.yml"
-          verbosity: "-vvv"
+          verbosity: "-v"
 
 
   # Use ansible to run packer builds
@@ -79,11 +79,13 @@ jobs:
     container:
       image: 'docker://bunchc/ironic-factory'
     steps:
-      - name: Download inventory files
+      - name: Download artifacts
         uses: actions/download-artifact@v2
-        with: 
-          name: inventory
-      - name: Run Ansible provisioning
+      - name: Run packer build
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ESXI_ISO_URL: ${{ secrets.ESXI_ISO_URL }}
+          ESXI_ISO_CHECKSUM: ${{ secrets.ESXI_ISO_CHECKSUM }}
         uses: 'bunchc/ironic_factory@v3'
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
