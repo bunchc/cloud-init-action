@@ -83,9 +83,10 @@ jobs:
         uses: actions/download-artifact@v2
       - name: Run packer build
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ESXI_ISO_URL: ${{ secrets.ESXI_ISO_URL }}
           ESXI_ISO_CHECKSUM: ${{ secrets.ESXI_ISO_CHECKSUM }}
+          PACKER_ESXI_REPO: ${{ secrets.PACKER_ESXI_REPO }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         uses: 'bunchc/ironic_factory@v3'
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
