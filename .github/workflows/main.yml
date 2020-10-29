@@ -117,4 +117,4 @@ jobs:
       - name: Destroy the OnMetal Device
         uses: 'bunchc/ironic_factory@v2'
         with:
-          playbook: /ansible/run-packer.yml
+          playbook: /ansible/destroy.yml
