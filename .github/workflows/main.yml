@@ -98,8 +98,7 @@ jobs:
   # Destroy the server
   destroy_device:
     name: Destroy OnMetal Device
-    needs: provision_packer_server
-    #needs: build_packer_server
+    needs: run_packer_builds
     runs-on: ubuntu-latest
     container:
       image: 'docker://bunchc/ironic-factory'
