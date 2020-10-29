@@ -42,6 +42,7 @@ jobs:
         uses: 'bunchc/ironic_factory@v3'
         with:
           playbook: "/ansible/create.yml"
+          verbosity: "-v"
       - name: Store ansible inventory
         uses: actions/upload-artifact@v2
         with:
@@ -74,7 +75,7 @@ jobs:
   # Use ansible to run packer builds
   run_packer_builds:
     name: Run Packer Builds
-    needs: provision_packer_server
+    needs: [build_vib, provision_packer_server]
     runs-on: ubuntu-latest
     container:
       image: 'docker://bunchc/ironic-factory'
