@@ -80,8 +80,14 @@ jobs:
     container:
       image: 'docker://bunchc/ironic-factory'
     steps:
-      - name: Download artifacts
+      - name: Download Ansible inventory
         uses: actions/download-artifact@v2
+        with:
+          name: inventory
+      - name: Download cloud-init VIB
+        uses: actions/download-artifact@v2
+        with:
+          name: cloud-init-vib
       - name: Run packer build
         env:
           ESXI_ISO_URL: ${{ secrets.ESXI_ISO_URL }}
