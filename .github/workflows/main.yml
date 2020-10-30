@@ -29,6 +29,7 @@ jobs:
         with:
           name: cloud-init-vib
           path: ${{ github.workspace }}/*.vib
+          if-no-files-found: error
 
 
   # Build an OnMetal server
@@ -48,6 +49,7 @@ jobs:
         with:
           name: inventory
           path: ${{ github.workspace }}/inventory
+          if-no-files-found: error
 
 
   # Use ansible to install and configure libvirt, kvm, and packer
