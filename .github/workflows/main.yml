@@ -71,7 +71,7 @@ jobs:
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
           playbook: "/ansible/provision.yml"
-          verbosity: "-vvv"
+          verbosity: "-v"
 
 
   # Use ansible to run packer builds
