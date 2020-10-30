@@ -11,6 +11,7 @@ env:
   RACKSPACE_TENANT_ID: ${{ secrets.RACKSPACE_TENANT_ID }}
   RACKSPACE_FLAVOR: ${{ secrets.RACKSPACE_FLAVOR }}
   RACKSPACE_IMAGE: ${{ secrets.RACKSPACE_IMAGE }}
+  BUILD_TEMPLATE: "new-template.json"
 
 
 jobs:
