@@ -98,7 +98,7 @@ jobs:
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
           playbook: "/ansible/run-packer.yml"
-          verbosity: "-vvv"
+          verbosity: "-v"
 
 
   # Destroy the server
