@@ -5,6 +5,7 @@ on: [push]
 # Set rax api stuff globally
 env:
   RACKSPACE_API_TOKEN: ${{ secrets.RACKSPACE_API_TOKEN }}
+  RACKSPACE_DESTROY: false
   RACKSPACE_USERNAME: ${{ secrets.RACKSPACE_USERNAME }}
   RACKSPACE_REGION: ${{ secrets.RACKSPACE_REGION }}
   RACKSPACE_SSH_PUB_KEY: ${{ secrets.RACKSPACE_SSH_PUB_KEY }}
