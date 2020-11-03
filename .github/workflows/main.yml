@@ -14,7 +14,7 @@ env:
   RACKSPACE_IMAGE: ${{ secrets.RACKSPACE_IMAGE }} # 563929f6-4b68-4b1f-8403-d2371e78d913 - Stored as a GH secret, should be replaced with a variable
   # Playbook settings
   RACKSPACE_DEBUG: false # Run some debugging functions in the playbooks
-  RACKSPACE_DESTROY: false # Destroy the onmetal host on failure and at the end of the run
+  RACKSPACE_DESTROY: true # Destroy the onmetal host on failure and at the end of the run
   # Packer settings
   PACKER_LOG: "1" # Tells packer to emit verbose logs to the terminal
   PACKER_LOG_PATH: "/github/workspace/packer.log"   # Path for packer to dump logs to
@@ -109,12 +109,6 @@ jobs:
           inventory: "${GITHUB_WORKSPACE}/inventory"
           playbook: "/ansible/run-packer.yml"
           verbosity: "-v"
-      - name: Store image as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: esxi_image
-          path: ${{ github.workspace }}/esxi67_x64
-          if-no-files-found: error
 
 
   # Destroy the server
