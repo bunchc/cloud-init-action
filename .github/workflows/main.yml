@@ -17,7 +17,7 @@ env:
   RACKSPACE_DESTROY: false # Destroy the onmetal host on failure and at the end of the run
   # Packer settings
   PACKER_LOG: "1" # Tells packer to emit verbose logs to the terminal
-  PACKER_LOG_PATH: "${GITHUB_WORKSPACE}/packer.log"   # Path for packer to dump logs to
+  PACKER_LOG_PATH: "/github/workspace/packer.log"   # Path for packer to dump logs to
   BUILD_TEMPLATE: "new-template.json"
 
 
