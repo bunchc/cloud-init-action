@@ -4,15 +4,20 @@ on: [push]
 
 # Set rax api stuff globally
 env:
-  RACKSPACE_API_TOKEN: ${{ secrets.RACKSPACE_API_TOKEN }}
-  RACKSPACE_DEBUG: false
-  RACKSPACE_DESTROY: false
-  RACKSPACE_USERNAME: ${{ secrets.RACKSPACE_USERNAME }}
-  RACKSPACE_REGION: ${{ secrets.RACKSPACE_REGION }}
-  RACKSPACE_SSH_PUB_KEY: ${{ secrets.RACKSPACE_SSH_PUB_KEY }}
-  RACKSPACE_TENANT_ID: ${{ secrets.RACKSPACE_TENANT_ID }}
-  RACKSPACE_FLAVOR: ${{ secrets.RACKSPACE_FLAVOR }}
-  RACKSPACE_IMAGE: ${{ secrets.RACKSPACE_IMAGE }}
+  # Rackspace Cloud Settings
+  RACKSPACE_API_TOKEN: ${{ secrets.RACKSPACE_API_TOKEN }} # Stored as a GH secret
+  RACKSPACE_USERNAME: ${{ secrets.RACKSPACE_USERNAME }} # Stored as a GH secret
+  RACKSPACE_REGION: ${{ secrets.RACKSPACE_REGION }} # IAD - Currently a secret, should be just set as a variable.
+  RACKSPACE_SSH_PUB_KEY: ${{ secrets.RACKSPACE_SSH_PUB_KEY }} # Stored as a GH secret
+  RACKSPACE_TENANT_ID: ${{ secrets.RACKSPACE_TENANT_ID }} # Stored as a GH secret
+  RACKSPACE_FLAVOR: ${{ secrets.RACKSPACE_FLAVOR }} # onmetal-io2 - Stored as a GH secret, should be replaced with a variable
+  RACKSPACE_IMAGE: ${{ secrets.RACKSPACE_IMAGE }} # 563929f6-4b68-4b1f-8403-d2371e78d913 - Stored as a GH secret, should be replaced with a variable
+  # Playbook settings
+  RACKSPACE_DEBUG: false # Run some debugging functions in the playbooks
+  RACKSPACE_DESTROY: false # Destroy the onmetal host on failure and at the end of the run
+  # Packer settings
+  PACKER_LOG: "1" # Tells packer to emit verbose logs to the terminal
+  PACKER_LOG_PATH: "${GITHUB_WORKSPACE}/packer.log"   # Path for packer to dump logs to
   BUILD_TEMPLATE: "new-template.json"
 
 
@@ -103,7 +108,13 @@ jobs:
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
           playbook: "/ansible/run-packer.yml"
-          verbosity: "-vvvvv"
+          verbosity: "-v"
+      - name: Store image as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: esxi_image
+          path: ${{ github.workspace }}/esxi67_x64
+          if-no-files-found: error
 
 
   # Destroy the server
