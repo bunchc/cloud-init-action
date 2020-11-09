@@ -1,0 +1,14 @@
+---
+name: test
+on:  
+  push:
+    paths:
+      - ".github/workflows/test.yml"
+
+jobs:
+  hello-world:
+    name: "Hello World"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo "Hello World"
+        run: echo "Hello World"
