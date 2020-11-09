@@ -3,7 +3,7 @@ name: test
 on:  
   push:
     paths:
-      - ".github/workflows/test.yml"
+      - ".github/workflows/test/test.yml"
 
 jobs:
   hello-world:
