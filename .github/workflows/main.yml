@@ -37,7 +37,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Build cloud-init
         id: build-step
-        uses: ./actions/build-cloud-init/action.yml
+        uses: actions/build-cloud-init/action.yml
       - name: Upload VIB
         uses: actions/upload-artifact@v2
         with:
@@ -56,7 +56,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Create OnMetal Server
-        uses: ./actions/run-packer/action.yml
+        uses: actions/run-packer/action.yml
         with:
           playbook: "/ansible/create.yml"
           verbosity: "-v"
@@ -85,7 +85,7 @@ jobs:
       - name: Run Ansible provisioning
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        uses: ./actions/run-packer/action.yml
+        uses: actions/run-packer/action.yml
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
           playbook: "/ansible/provision.yml"
@@ -116,7 +116,7 @@ jobs:
           ESXI_ISO_CHECKSUM: ${{ secrets.ESXI_ISO_CHECKSUM }}
           PACKER_ESXI_REPO: ${{ secrets.PACKER_ESXI_REPO }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        uses: ./actions/run-packer/action.yml
+        uses: actions/run-packer/action.yml
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
           playbook: "/ansible/run-packer.yml"
@@ -139,7 +139,7 @@ jobs:
         with: 
           name: inventory
       - name: Destroy the OnMetal Device
-        uses: ./actions/run-packer/action.yml
+        uses: actions/run-packer/action.yml
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
           playbook: "/ansible/run-packer.yml"
