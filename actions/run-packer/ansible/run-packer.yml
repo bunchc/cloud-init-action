@@ -63,10 +63,11 @@
                 -only={{ builders }} \
                 -var "iso_checksum={{ esxi_iso_checksum }}" \
                 -var "iso_url={{ esxi_iso_url }}" \
-                -var "cloud_init={{ vib_location.files.0.path | basename }}"
-                "{{ build_path }}/{{ build_template }}"
+                -var "cloud_init={{ vib_location.files.0.path | basename }}" \
+                -var-file=box_info.json -var-file=template.json \
+                "{{ build_path }}/packer-templates/{{ os }}/{{ os | lower }}.json"
           args:
-            chdir: "{{ build_path }}"
+            chdir: "{{ build_path }}/packer-templates/{{ os }}/{{ version }}/"
           environment:
             PACKER_LOG: "{{ lookup('env', 'PACKER_LOG') | default('', True)}}"
             PACKER_LOG_PATH: "{{ lookup('env', 'PACKER_LOG_PATH') | default('', True)}}"

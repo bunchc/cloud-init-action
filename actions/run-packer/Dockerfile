@@ -19,6 +19,7 @@ RUN ln -s /usr/bin/python3 /usr/bin/python && \
 COPY --from=pyrax-image /root/.local /root/.local
 COPY entrypoint.sh /entrypoint.sh
 COPY ansible/ /ansible
+RUN chmod +x /entrypoint.sh
 ENV PYTHONPATH "${PYTONPATH}:/root/.local/lib/python3.6/site-packages"
 CMD ["ansible-playbook" "--version"]
 

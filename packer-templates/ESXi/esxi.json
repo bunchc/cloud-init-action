@@ -1,0 +1,90 @@
+{
+  "builders": [
+    {
+      "accelerator": "kvm",
+      "boot_command": [
+        "<enter><wait>O<wait> ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>"
+      ],
+      "boot_wait": "6s",
+      "cpus": "{{ user `vcpu` }}",
+      "disk_interface": "ide",
+      "disk_size": "{{ user `disk_size` }}",
+      "format": "qcow2",
+      "headless": "{{ user `headless` }}",
+      "host_port_min": "{{ user `ssh_port` }}",
+      "host_port_max": "{{ user `ssh_port` }}",
+      "http_directory": "{{ user `http_directory` }}",
+      "iso_checksum": "{{ user `iso_checksum_type` }}:{{ user `iso_checksum` }}",
+      "iso_url": "{{ user `iso_url` }}",
+      "memory": "{{ user `memory` }}",
+      "machine_type": "q35",
+      "net_device": "e1000",
+      "output_directory": "{{ user `output_directory` }}",
+      "pause_before_connecting": "5m",
+      "shutdown_command": "{{ user `shutdown_command` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_timeout": "60m",
+      "ssh_username": "{{ user `ssh_username` }}",
+      "type": "qemu",
+      "vm_name": "{{ user `vm_name` }}-{{ timestamp }}",
+      "vnc_bind_address": "0.0.0.0",
+      "vnc_port_max": "5982",
+      "vnc_port_min": "5982",
+      "qemuargs": [
+        [
+          "-cpu",
+          "host"
+        ],
+        [
+          "-vga",
+          "qxl"
+        ]
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "{{ user `http_directory` }}/{{user `cloud_init` }}",
+      "destination": "/vmfs/volumes/datastore1/cloud-init.vib"
+    },
+    {
+      "type": "file",
+      "source": "scripts/cloud-init.sh",
+      "destination": "/etc/rc.local.d/local.sh"
+    },
+    {
+      "type": "shell",
+      "script": "./scripts/bootstrap.sh"
+    }
+  ],
+  "post-processors": [
+    {
+      "compression_level": "9",
+      "keep_input_artifact": true,
+      "output": "{{ user `vm_name` }}-vagrant.box",
+      "type": "vagrant"
+    }
+  ],
+  "variables": {
+    "cloud_init": "",
+    "disk_size": "204800",
+    "headless": "True",
+    "http_directory": "http",
+    "iso_checksum": "",
+    "iso_checksum_type": "sha256",
+    "iso_url": "",
+    "memory": "16384",
+    "output_directory": "output",
+    "remove_interfaces": "True",
+    "save_to_dir": "output",
+    "save_to_filename": "esxi67_x64-{{isotime \"2006-01-02\"}}",
+    "shutdown_command": "esxcli system maintenanceMode set -e true -t 0; esxcli system shutdown poweroff -d 10 -r \"Packer Shutdown\"; esxcli system maintenanceMode set -e false -t 0",
+    "ssh_password": "VMw@re1",
+    "ssh_username": "root",
+    "ssh_port": "2499",
+    "vcpu": "4",
+    "version": "10",
+    "vm_name": ""
+  }
+}

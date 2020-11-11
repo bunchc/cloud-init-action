@@ -1,0 +1,8 @@
+{
+  "auto_build": "True",
+  "box_name": "esxi67",
+  "box_tag": "bunchc/esxi67",
+  "description": "VMware ESXi 6.7",
+  "private": "True",
+  "short_description": "VMware ESXi 6.7"
+}

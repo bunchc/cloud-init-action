@@ -17,5 +17,6 @@ RUN rpm --rebuilddb \
 COPY entrypoint.sh /entrypoint.sh
 COPY playbooks/ /playbooks
 COPY scripts/ /scripts
+RUN chmod +x /entrypoint.sh
 CMD ["/bin/bash"]
 ENTRYPOINT ["/entrypoint.sh"]

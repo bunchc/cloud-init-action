@@ -1,0 +1,22 @@
+---
+###################
+# ESXi Test Nodes #
+###################
+
+# ESXi6.7
+- name: esxi67
+  ssh_user: root
+  ssh_pass: VMw@re1
+  #mgmt_mac: "52:54:00:00:01:01"
+  ansible_groups:
+    - esxi-hosts
+  box: esxi67
+  desktop: false
+  provider: libvirt
+  interfaces:
+    - auto_config: true
+      method: dhcp
+  mem: 16384
+  provision: true
+  vcpu: 4
+  windows: false
