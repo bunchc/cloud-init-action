@@ -67,7 +67,7 @@
                 -var-file=box_info.json -var-file=template.json \
                 "{{ build_path }}/packer-templates/{{ os }}/{{ os | lower }}.json"
           args:
-            chdir: "{{ build_path }}/packer-templates/{{ os }}/{{ version }}/"
+            chdir: "{{ build_path }}/packer-templates/{{ os }}/{{ os_version }}/"
           environment:
             PACKER_LOG: "{{ lookup('env', 'PACKER_LOG') | default('', True)}}"
             PACKER_LOG_PATH: "{{ lookup('env', 'PACKER_LOG_PATH') | default('', True)}}"
