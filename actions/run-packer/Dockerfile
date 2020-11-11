@@ -14,7 +14,7 @@ RUN apk add --update --no-cache --virtual build-dependencies \
 FROM alpine:3.9
 
 RUN apk add --no-cache ansible openssh-client
-RUN ln -s /usr/bin/python3 /usr/bin/python & \
+RUN ln -s /usr/bin/python3 /usr/bin/python && \
     ln -s /usr/bin/pip3 /usr/bin/pip
 COPY --from=pyrax-image /root/.local /root/.local
 COPY entrypoint.sh /entrypoint.sh
