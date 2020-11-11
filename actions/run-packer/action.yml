@@ -20,7 +20,7 @@ outputs:
     description: 'The time ansible-playbook finished.'
 runs:
   using: 'docker'
-  image: 'docker://bunchc/ironic-factory'
+  image: 'Dockerfile'
   args:
     - ${{ inputs.verbosity }}
     - ${{ inputs.playbook }}

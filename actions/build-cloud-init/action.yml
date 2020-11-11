@@ -13,6 +13,6 @@ outputs:
     description: 'The time ansible-playbook finished.'
 runs:
   using: 'docker'
-  image: 'docker://bunchc/cloud-init-action'
+  image: 'Dockerfile'
   args:
     - ${{ inputs.cloud-init-repo }}
