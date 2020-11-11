@@ -1,9 +1,9 @@
 ---
 name: Build ESXi Image with Cloud-Init
-on:  
-  push:
-    paths:
-      - ".github/workflows/main.yml"
+on: [push]
+#  push:
+#    paths:
+#      - ".github/workflows/main.yml"
 
 # Set rax api stuff globally
 env:
