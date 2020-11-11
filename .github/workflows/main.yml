@@ -142,5 +142,5 @@ jobs:
         uses: ./actions/run-packer/
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
-          playbook: "/ansible/run-packer.yml"
+          playbook: "/ansible/destroy.yml"
           verbosity: "-v"

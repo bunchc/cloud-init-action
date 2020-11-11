@@ -72,8 +72,9 @@
             PACKER_LOG_PATH: "{{ lookup('env', 'PACKER_LOG_PATH') | default('', True)}}"
           when: ansible_os_family == "Debian"
           register: packer_run
+          until: packer_run is succeeded
           retries: 3
-          delay: 10
+          delay: 60
 
         - name: Upload image to Cloud Files
           block:
