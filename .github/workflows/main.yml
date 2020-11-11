@@ -31,6 +31,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Build cloud-init
     steps:
+      - name: Check out the repo on the runner's workspace
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Build cloud-init
         id: build-step
         uses: ./.github/actions/build-cloud-init/action.yml
@@ -46,7 +50,11 @@ jobs:
   build_packer_server:
     name: Build Packer Build Server
     runs-on: ubuntu-latest
-    steps:
+    steps:    
+      - name: Check out the repo on the runner's workspace
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Create OnMetal Server
         uses: ./.github/actions/run-packer/action.yml
         with:
@@ -66,6 +74,10 @@ jobs:
     needs: build_packer_server
     runs-on: ubuntu-latest
     steps:
+      - name: Check out the repo on the runner's workspace
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Download inventory files
         uses: actions/download-artifact@v2
         with: 
@@ -86,6 +98,10 @@ jobs:
     needs: [build_vib, provision_packer_server]
     runs-on: ubuntu-latest
     steps:
+      - name: Check out the repo on the runner's workspace
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Download Ansible inventory
         uses: actions/download-artifact@v2
         with:
@@ -114,6 +130,10 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
+      - name: Check out the repo on the runner's workspace
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Download inventory files
         uses: actions/download-artifact@v2
         with: 
