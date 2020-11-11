@@ -28,13 +28,11 @@ jobs:
   # Build cloud-init and package into a vib
   build_vib:
     runs-on: ubuntu-latest
-    container:
-      image: 'docker://bunchc/cloud-init-action'
     name: Build cloud-init
     steps:
       - name: Build cloud-init
         id: build-step
-        uses: bunchc/cloud-init-action@v2
+        uses: '.github/actions/build-cloud-init/action.yml'
       - name: Upload VIB
         uses: actions/upload-artifact@v2
         with:
@@ -47,11 +45,9 @@ jobs:
   build_packer_server:
     name: Build Packer Build Server
     runs-on: ubuntu-latest
-    container:
-      image: 'docker://bunchc/ironic-factory'
     steps:
       - name: Create OnMetal Server
-        uses: 'bunchc/ironic_factory@v3'
+        uses: '.github/actions/run-packer/action.yml'
         with:
           playbook: "/ansible/create.yml"
           verbosity: "-v"
@@ -68,8 +64,6 @@ jobs:
     name: Provision Packer Build Server
     needs: build_packer_server
     runs-on: ubuntu-latest
-    container:
-      image: 'docker://bunchc/ironic-factory'
     steps:
       - name: Download inventory files
         uses: actions/download-artifact@v2
@@ -78,7 +72,7 @@ jobs:
       - name: Run Ansible provisioning
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        uses: 'bunchc/ironic_factory@v3'
+        uses: '.github/actions/run-packer/action.yml'
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
           playbook: "/ansible/provision.yml"
@@ -90,8 +84,6 @@ jobs:
     name: Run Packer Builds
     needs: [build_vib, provision_packer_server]
     runs-on: ubuntu-latest
-    container:
-      image: 'docker://bunchc/ironic-factory'
     steps:
       - name: Download Ansible inventory
         uses: actions/download-artifact@v2
@@ -107,7 +99,7 @@ jobs:
           ESXI_ISO_CHECKSUM: ${{ secrets.ESXI_ISO_CHECKSUM }}
           PACKER_ESXI_REPO: ${{ secrets.PACKER_ESXI_REPO }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        uses: 'bunchc/ironic_factory@v3'
+        uses: '.github/actions/run-packer/action.yml'
         with:
           inventory: "${GITHUB_WORKSPACE}/inventory"
           playbook: "/ansible/run-packer.yml"
@@ -119,8 +111,6 @@ jobs:
     name: Destroy OnMetal Device
     needs: run_packer_builds
     runs-on: ubuntu-latest
-    container:
-      image: 'docker://bunchc/ironic-factory'
     if: ${{ always() }}
     steps:
       - name: Download inventory files
@@ -128,6 +118,8 @@ jobs:
         with: 
           name: inventory
       - name: Destroy the OnMetal Device
-        uses: 'bunchc/ironic_factory@v2'
+        uses: '.github/actions/run-packer/action.yml'
         with:
-          playbook: /ansible/destroy.yml
+          inventory: "${GITHUB_WORKSPACE}/inventory"
+          playbook: "/ansible/run-packer.yml"
+          verbosity: "-v"

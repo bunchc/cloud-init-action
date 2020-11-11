@@ -1,0 +1,47 @@
+---
+- name: "Upload Ironic image to Cloud Files"
+  hosts: metal
+  gather_facts: yes
+  tasks:
+    - name: Ensure pyrax is installed
+      pip:
+        name: pyrax
+    - name: "Create container if required"
+      rax_files:
+        api_key: "{{ lookup('env', 'RACKSPACE_API_TOKEN') }}"
+        username: "{{ lookup('env', 'RACKSPACE_USERNAME') }}"
+        region: "{{ lookup('env', 'RACKSPACE_REGION') }}"
+        container: "Cody-Test-Ironic-Images"
+        state: present
+    - name: "What is wrong with {{ source_image|lower }}"
+      debug:
+        msg: "{{ source_image|lower }}"
+    # Upload packer image to Rackspace Cloud Files
+    - name: Upload Ironic image
+      rax_files_objects:
+        api_key: "{{ lookup('env', 'RACKSPACE_API_TOKEN') }}"
+        username: "{{ lookup('env', 'RACKSPACE_USERNAME') }}"
+        region: "{{ lookup('env', 'RACKSPACE_REGION') }}"
+        tenant_id: "{{ lookup('env', 'RACKSPACE_TENANT_ID') }}"
+        container: "Cody-Test-Ironic-Images"
+        src: "{{ source_image }}/{{ dest_file|lower }}"
+        dest: "{{ dest_path }}/{{ ansible_date_time.date }}/{{ dest_file|lower }}-{{ ansible_date_time.date }}.qcow2"
+        method: put
+    # Create a blank file to be used as a pointer to the image
+    - name: "Touch {{ dest_file|lower }}"
+      file:
+        path: "/tmp/{{ dest_file|lower }}.qcow2"
+        state: touch
+    # Upload the blank file and set the headers to point to our image
+    - name: Update symlink
+      rax_files_objects:
+        api_key: "{{ lookup('env', 'RACKSPACE_API_TOKEN') }}"
+        username: "{{ lookup('env', 'RACKSPACE_USERNAME') }}"
+        region: "{{ lookup('env', 'RACKSPACE_REGION') }}"
+        container: "Cody-Test-Ironic-Images"
+        src: "/tmp/{{ dest_file|lower }}.qcow2"
+        dest: "{{ dest_path }}/{{ dest_file|lower }}.qcow2"
+        method: put
+        meta:
+          Content-Type: application/x-www-form-urlencoded
+          X-Object-Manifest: "Cody-Test-Ironic-Images/{{ dest_path }}/{{ ansible_date_time.date }}/{{ dest_file|lower }}-{{ ansible_date_time.date }}.qcow2"

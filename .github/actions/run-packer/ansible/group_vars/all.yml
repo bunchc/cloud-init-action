@@ -1,0 +1,74 @@
+---
+# Variables for ironic_factory
+
+# Workflow settings
+debug_workflow: "{{ lookup('env', 'RACKSPACE_DEBUG') | default('False', True)}}" # Enable debug.yml playbook
+destroy_host: "{{ lookup('env', 'RACKSPACE_DESTROY') | default('True', True) }}" # Destroy the OnMetal host
+destroy_on_fail: "{{ lookup('env', 'RACKSPACE_DESTROY') | default('True', True) }}" # Destroy on failure
+
+# Packer settings
+builders: "{{ lookup('env', 'PACKER_BUILDERS') | default('qemu', True) }}" # Which builders to 
+build_path: "{{ lookup('env', 'GITHUB_WORKSPACE') | default('/tmp', True) }}/packer-esxi" # Working directory for Packer build
+build_template: "{{ lookup('env', 'BUILD_TEMPLATE') | default('template.json', True) }}" # template.json file to use
+packer_esxi_repo: "{{ lookup('env', 'PACKER_ESXI_REPO') | default('', True)}}" # github repo containing Packer templates to use
+
+# ESXi Settings
+esxi_iso_url: "{{ lookup('env', 'ESXI_ISO_URL') | default('', True)}}" # URL to ESXi ISO. Store in a github secret
+esxi_iso_checksum: "{{ lookup('env', 'ESXI_ISO_CHECKSUM') | default('', True)}}" # SHA256 checksum of the ESXi ISO
+
+# Where the cloud-init-vib is stored
+vib_path: "{{ lookup('env', 'GITHUB_WORKSPACE') }}/cloud-init-vib"
+
+# Disks for ZFS on OnMetal-IO2 instances
+disks:
+  - /dev/sdc
+  - /dev/sdd
+
+# Ansible version to install on OnMetal host
+ansible_ver: 2.7.0.0
+
+# Supporting Debian packages
+debian_packages:
+  - build-essential
+  - libffi-dev
+  - libssl-dev
+  - python-dev
+  - python2.7
+  - python-setuptools
+  - git
+  - iptables
+  - curl
+  - tcpdump
+  - lsof
+  - vim
+  - bridge-utils
+  - cloud-initramfs-dyn-netconf
+  - libdumbnet1
+  - libnfnetlink0
+  - netbase
+  - nplan
+  - netcat
+  - netcat-openbsd
+  - netcat-traditional
+  - ifenslave
+  - debootstrap
+  - ifenslave-2.6
+  - lvm2
+  - chrony
+  - vlan
+  - linux-image-extra-virtual
+  - ruby-libvirt
+  - libxslt-dev
+  - libxml2-dev
+  - libvirt-dev
+  - qemu-utils
+  - zfsutils-linux
+
+# SSH Overrides for ansible-hardening role
+security_sshd_permit_root_login: yes
+security_sshd_client_alive_count_max: 720
+security_sshd_client_alive_interval: 120
+
+pri_domain_name: vagrant.local
+
+update_host_vars: true

@@ -1,0 +1,33 @@
+- name: "[Debug] Printing ansible_env"
+  debug:
+    var: ansible_env
+- name: "[Debug] Printing ansible python"
+  debug:
+    msg: "Ansible python: {{ ansible_playbook_python }}"
+- name: "[Debug] Getting PYTHONPATH"
+  local_action: shell python3 -c 'import sys; print(":".join(sys.path))'
+  register: pythonpath
+- name: "[Debug] Print python path"
+  debug:
+    msg: "PYTHONPATH: {{ pythonpath.stdout }}"
+- name: "[Debug] Check for Rackspace module dependencies"
+  command: "{{ ansible_python_interpreter | default('/usr/bin/python') }} -c 'import {{ module }}; print({{ module }}.__version__)'"
+  vars:
+    module: pyrax
+  register: test
+- name: "[Debug] Was the module found"
+  debug:
+    var: test.stdout
+- name: "[Debug] List files in {{ lookup('env', 'GITHUB_WORKSPACE') }}/"
+  find:
+    paths: "{{ lookup('env', 'GITHUB_WORKSPACE') }}/"
+    patterns: "*"
+    recurse: true
+  register: debug_paths
+- name: "[Debug] Use command to list files in {{ lookup('env', 'GITHUB_WORKSPACE') }}"
+  command: "ls -R {{ lookup('env', 'GITHUB_WORKSPACE') }}"
+  register: dir_out
+- name: "[Debug] Print files" 
+  debug:
+    var: "{{ item }}"
+  with_items: dir_out.stdout_lines

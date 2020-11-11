@@ -1,0 +1,22 @@
+- name: Create ssh private key
+  blockinfile:
+    create: yes
+    backup: yes
+    path: /root/.ssh/id_rsa
+    block: "{{ lookup('env', 'SSH_PRIVATE_KEY') }}"
+    marker: ""
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Remove blank lines
+  lineinfile:
+    path: /root/.ssh/id_rsa
+    state: absent
+    regexp: '^$'
+
+- name: chmod ~/.ssh/id_rsa
+  file:
+    path: /root/.ssh/id_rsa
+    owner: root
+    group: root
+    mode: '0600'
+  ignore_errors: "{{ ansible_check_mode }}"

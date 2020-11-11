@@ -1,0 +1,7 @@
+---
+packer_ver: "1.6.0"
+packer_base_url: "https://releases.hashicorp.com/packer/{{ packer_ver }}/"
+packer_pkg: packer_{{ packer_ver }}_linux_amd64.zip
+packer_version_str: "Packer v{{ packer_ver }}"
+packer_plugins_force_install: false
+packer_plugins: {}

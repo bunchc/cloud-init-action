@@ -1,0 +1,27 @@
+# action.yml
+name: 'PCD Image Builder'
+description: 'Uses Ansible to run Packer builds.'
+inputs:
+  verbosity:
+    description: 'Verbosity level of Ansible run. Passes -vvv to ansible-playbook'
+    default: "-vvv"
+    required: true
+  playbook:
+    description: 'Ansible playbook to run'
+    required: true
+    default: '/ansible/destroy.yml'
+  inventory:
+    description: 'Ansible inventory file'
+    required: false
+outputs:
+  starttime:
+    description: 'The time ansible-playbook started.'
+  endtime:
+    description: 'The time ansible-playbook finished.'
+runs:
+  using: 'docker'
+  image: 'docker://bunchc/ironic-factory'
+  args:
+    - ${{ inputs.verbosity }}
+    - ${{ inputs.playbook }}
+    - ${{ inputs.inventory }}

@@ -1,0 +1,111 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Setup SSH to remote host
+      include_tasks: ssh-setup.yml
+    - name: Include debugging
+      include_tasks: debug.yml
+      when:
+        - debug_workflow is defined
+        - debug_workflow
+        - not ansible_check_mode
+
+
+- hosts: all
+  become: true
+  become_method: sudo
+  become_user: root
+  strategy: free
+  tasks:
+    - name: Build ESXi Image
+      block:
+        - name: Setup SSH to remote host
+          include_tasks: ssh-setup.yml
+
+        - name: Clone packer-esxi repo
+          git:
+            accept_hostkey: yes
+            repo: "{{ packer_esxi_repo }}"
+            dest: "{{ build_path }}"
+
+        - name: Check if cloud-init VIB exists
+          local_action:
+            module: find
+            paths: "{{ lookup('env', 'GITHUB_WORKSPACE') }}"
+            patterns: '*.vib'
+            recurse: yes
+          register: vib_location
+        
+        - name: "[Debug] Print vib location"
+          debug:
+            msg: " Files: {{ item.files }}"
+          with_items:
+            - "{{ vib_location }}"
+          when:
+            - debug_workflow is defined
+            - debug_workflow
+
+        - name: Copy cloud-init VIB into place
+          copy:
+            dest: "{{ build_path }}/http/"
+            src: "{{ vib_location.files.0.path }}"
+          when:
+            - vib_location is defined
+            - vib_location.files.0.mode == '0644'
+
+        - name: Running packer build
+          become: true
+          command: >
+              packer build \
+                -timestamp-ui \
+                -only={{ builders }} \
+                -var "iso_checksum={{ esxi_iso_checksum }}" \
+                -var "iso_url={{ esxi_iso_url }}" \
+                -var "cloud_init={{ vib_location.files.0.path | basename }}"
+                "{{ build_path }}/{{ build_template }}"
+          args:
+            chdir: "{{ build_path }}"
+          environment:
+            PACKER_LOG: "{{ lookup('env', 'PACKER_LOG') | default('', True)}}"
+            PACKER_LOG_PATH: "{{ lookup('env', 'PACKER_LOG_PATH') | default('', True)}}"
+          when: ansible_os_family == "Debian"
+          register: packer_run
+          retries: 3
+          delay: 10
+
+        - name: Upload image to Cloud Files
+          block:
+            - name: Ensure pyrax is installed
+              pip:
+                name: pyrax
+
+            - name: Create container if required
+              rax_files:
+                api_key: "{{ lookup('env', 'RACKSPACE_API_TOKEN') }}"
+                username: "{{ lookup('env', 'RACKSPACE_USERNAME') }}"
+                region: "{{ lookup('env', 'RACKSPACE_REGION') }}"
+                container: "Packer-ESXi"
+                state: present
+
+            - name: Upload Ironic image
+              rax_files_objects:
+                api_key: "{{ lookup('env', 'RACKSPACE_API_TOKEN') }}"
+                username: "{{ lookup('env', 'RACKSPACE_USERNAME') }}"
+                region: "{{ lookup('env', 'RACKSPACE_REGION') }}"
+                tenant_id: "{{ lookup('env', 'RACKSPACE_TENANT_ID') }}"
+                container: "Packer-ESXi"
+                src: "{{ build_path }}/output"
+                method: put
+
+          when:
+            - packer_run is defined
+            - packer_run is succeeded
+
+      rescue:
+        - name: "[Fatal] Destroying Server"
+          include_tasks: destroy_on_fail.yml
+          when:
+            - destroy_on_fail is defined
+            - destroy_on_fail

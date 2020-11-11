@@ -1,0 +1,58 @@
+---
+- name: Cleanup OnMetal hosts
+  block:
+    - name: Set instance ID fact (Online Server)
+      set_fact:
+        rax_instance_id: "{{ rackspace.instances[0].id }}"
+      when:
+        - rackspace is defined
+    
+    - name: Set instance ID fact (Inventory)
+      block:
+        - name: Read inventory file
+          local_action:
+            module: include_vars
+            file: "{{ lookup('env', 'GITHUB_WORKSPACE') }}/inventory"
+            name: imported_vars
+
+        - name: Set instance ID fact
+          set_fact:
+            rax_instance_id: "{{ imported_vars | json_query('all.hosts.*.rackspace_device_id') }}"
+          when:
+            - imported_vars is defined
+      when:
+        - rackspace is not defined
+
+    - name: Destroy OnMetal host
+      block:
+        - name: Check to see if server has not already been deleted.
+          local_action:
+            module: rax_facts
+            api_key: "{{ lookup('env', 'RACKSPACE_API_TOKEN') }}"
+            username: "{{ lookup('env', 'RACKSPACE_USERNAME') }}"
+            region: "{{ lookup('env', 'RACKSPACE_REGION') }}"
+            id: "{{ rax_instance_id }}"
+          register: rax_instance_facts
+
+        - name: "[Debug] Info about instance"
+          debug:
+            var: rax_instance_facts
+          when:
+            - rax_instance_facts is defined
+            - debug_workflow is defined
+            - debug_workflow
+
+        - name: Delete the server
+          local_action:
+            module: rax
+            api_key: "{{ lookup('env', 'RACKSPACE_API_TOKEN') }}"
+            username: "{{ lookup('env', 'RACKSPACE_USERNAME') }}"
+            region: "{{ lookup('env', 'RACKSPACE_REGION') }}"
+            instance_ids: "{{ rax_instance_id }}"
+            state: absent
+          register: rackspace_del
+          ignore_errors: true
+
+        - name: "[Debug] Print rackspace_del"
+          debug:
+            var: rackspace_del

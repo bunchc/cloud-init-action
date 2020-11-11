@@ -1,0 +1,26 @@
+---
+- name:
+    Delete a Rackspace cloud server.
+  hosts: localhost
+  connection: local
+  vars:
+    destroy_host: "{{ lookup('env', 'RACKSPACE_DESTROY') }}"
+    debug_workflow: "{{ lookup('env', 'RACKSPACE_DEBUG') }}"
+    pip_pyrax: false
+  tasks:
+    - name: "Include debugging"
+      include_tasks: debug.yml
+      when:
+        - debug_workflow is defined
+        - debug_workflow
+
+    - name: Install Rackspace module dependencies
+      pip:
+        name: pyrax
+        extra_args: --user --no-cache-dir
+      when:
+        - pip_pyrax is defined
+        - pip_pyrax
+
+    - name: Destroying OnMetal host
+      include_tasks: destroy_on_fail.yml
