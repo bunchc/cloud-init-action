@@ -1,6 +1,15 @@
 ---
 # Variables for ironic_factory
 
+# Rackspace Cloud Settings
+onmetal_servername: "{{ lookup('env', 'RACKSPACE_ONMETAL_SERVER_NAME') | default('ironic-factory', True) }}"
+rax_servername: "{{ onmetal_servername }}-{{ '%Y%m%d%H%M%S'|strftime }}"
+ssh_key_name: "{{ lookup('env', 'RACKSPACE_SSH_KEYNANE') | default('Ironic-Factory Key', True) }}"
+username:  "{{ 'ubuntu' if lookup('env', 'RACKSPACE_IMAGE') == '6604871b-3d19-4727-8b05-2501a4a8afad' else 'root'}}"
+usernames:
+  - root
+  - ubuntu
+
 # Workflow settings
 debug_workflow: "{{ lookup('env', 'RACKSPACE_DEBUG') | default('False', True)}}" # Enable debug.yml playbook
 destroy_host: "{{ lookup('env', 'RACKSPACE_DESTROY') | default('True', True) }}" # Destroy the OnMetal host
@@ -19,13 +28,17 @@ esxi_iso_checksum: "{{ lookup('env', 'ESXI_ISO_CHECKSUM') | default('', True)}}"
 # Where the cloud-init-vib is stored
 vib_path: "{{ lookup('env', 'GITHUB_WORKSPACE') }}/cloud-init-vib"
 
-# Disks for ZFS on OnMetal-IO2 instances
+# ZFS on OnMetal-IO2 instances
+do_zfs: "{{ true if lookup('env', 'RACKSPACE_FLAVOR') == 'onmetal-io2' else false }}"
 disks:
   - /dev/sdc
   - /dev/sdd
 
 # Ansible version to install on OnMetal host
 ansible_ver: 2.7.0.0
+
+# Install pyrax with pip
+pip_pyrax: false
 
 # Supporting Debian packages
 debian_packages:

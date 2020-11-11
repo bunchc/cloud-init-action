@@ -12,9 +12,6 @@
 - hosts: all
   strategy: free
   gather_facts: false
-  vars:
-    destroy_on_fail: "{{ lookup('env', 'RACKSPACE_DESTROY') }}"
-    destroy_host: "{{ lookup('env', 'RACKSPACE_DESTROY') }}"
   tasks:
     - name: Establish connectivity
       block:
@@ -51,10 +48,6 @@
   become_method: sudo
   gather_facts: true
   strategy: free
-  vars:
-    destroy_on_fail: "{{ lookup('env', 'RACKSPACE_DESTROY') }}"
-    destroy_host: "{{ lookup('env', 'RACKSPACE_DESTROY') }}"
-    do_zfs: "{{ true if lookup('env', 'RACKSPACE_FLAVOR') == 'onmetal-io2' else false }}"
   roles:
   tasks:
     - name: Install packages
@@ -159,9 +152,6 @@
   become: true
   become_method: sudo
   strategy: free
-  vars:
-    destroy_on_fail: "{{ lookup('env', 'RACKSPACE_DESTROY') }}"
-    destroy_host: "{{ lookup('env', 'RACKSPACE_DESTROY') }}"
   tasks:
     - name: Provision Host
       block:

@@ -4,18 +4,6 @@
     instance metadata like server IP and ID for further consumption.
   hosts: localhost
   connection: local
-  vars:
-    destroy_on_fail: "{{ lookup('env', 'RACKSPACE_DESTROY') }}"
-    destroy_host: "{{ lookup('env', 'RACKSPACE_DESTROY') }}"
-    debug_workflow: "{{ lookup('env', 'RACKSPACE_DEBUG') }}"
-    onmetal_servername: "{{ lookup('env', 'RACKSPACE_ONMETAL_SERVER_NAME') | default('ironic-factory', True) }}"
-    pip_pyrax: false
-    rax_servername: "{{ onmetal_servername }}-{{ '%Y%m%d%H%M%S'|strftime }}"
-    ssh_key_name: "{{ lookup('env', 'RACKSPACE_SSH_KEYNANE') | default('Ironic-Factory Key', True) }}"
-    username:  "{{ 'ubuntu' if lookup('env', 'RACKSPACE_IMAGE') == '6604871b-3d19-4727-8b05-2501a4a8afad' else 'root'}}"
-    usernames:
-      - root
-      - ubuntu
   tasks:
     - name: Include debugging
       include_tasks: debug.yml

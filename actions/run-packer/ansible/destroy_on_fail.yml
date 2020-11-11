@@ -52,7 +52,3 @@
             state: absent
           register: rackspace_del
           ignore_errors: true
-
-        - name: "[Debug] Print rackspace_del"
-          debug:
-            var: rackspace_del

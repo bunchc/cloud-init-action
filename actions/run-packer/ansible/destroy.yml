@@ -3,10 +3,6 @@
     Delete a Rackspace cloud server.
   hosts: localhost
   connection: local
-  vars:
-    destroy_host: "{{ lookup('env', 'RACKSPACE_DESTROY') }}"
-    debug_workflow: "{{ lookup('env', 'RACKSPACE_DEBUG') }}"
-    pip_pyrax: false
   tasks:
     - name: "Include debugging"
       include_tasks: debug.yml
