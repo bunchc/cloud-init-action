@@ -5,6 +5,7 @@ on:
     paths:
       - ".github/workflows/main.yml"
 
+
 # Set rax api stuff globally
 env:
   # Rackspace Cloud Settings
