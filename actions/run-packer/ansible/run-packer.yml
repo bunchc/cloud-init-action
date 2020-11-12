@@ -111,8 +111,7 @@
                 src: "{{ item.path }}"
                 dest: "{{ os }}/{{ os_version }}/{{ item.path | | basename }}-{{ ansible_date_time.date }}.qcow2"
                 method: put
-              with_items:
-                - image_location.files
+              loop: "{{ image_location.files }}"
 
           when:
             - packer_run is defined
