@@ -4,19 +4,25 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: "Include debugging"
-      include_tasks: debug.yml
-      when:
-        - debug_workflow is defined
-        - debug_workflow
+    - name: Destroy the OnMetal server
+      block:
+        - name: "Include debugging"
+          include_tasks: debug.yml
+          when:
+            - debug_workflow is defined
+            - debug_workflow
 
-    - name: Install Rackspace module dependencies
-      pip:
-        name: pyrax
-        extra_args: --user --no-cache-dir
-      when:
-        - pip_pyrax is defined
-        - pip_pyrax
+        - name: Install Rackspace module dependencies
+          pip:
+            name: pyrax
+            extra_args: --user --no-cache-dir
+          when:
+            - pip_pyrax is defined
+            - pip_pyrax
 
-    - name: Destroying OnMetal host
-      include_tasks: destroy_on_fail.yml
+        - name: Destroying OnMetal host
+          include_tasks: destroy_on_fail.yml
+
+      when:
+        - destroy_on_fail is defined
+        - destroy_on_fail

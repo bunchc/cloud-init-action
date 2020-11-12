@@ -88,18 +88,27 @@
                 api_key: "{{ lookup('env', 'RACKSPACE_API_TOKEN') }}"
                 username: "{{ lookup('env', 'RACKSPACE_USERNAME') }}"
                 region: "{{ lookup('env', 'RACKSPACE_REGION') }}"
-                container: "Packer-ESXi"
+                container: "packer-images"
                 state: present
 
+            - name: Check for image
+              find:
+                path: "{{ build_path }}/packer-templates/{{ os }}/{{ os_version }}/output/"
+                pattern: "*{{ os | lower }}{{ os_version }}*"
+              register: image_location
+              
             - name: Upload Ironic image
               rax_files_objects:
                 api_key: "{{ lookup('env', 'RACKSPACE_API_TOKEN') }}"
                 username: "{{ lookup('env', 'RACKSPACE_USERNAME') }}"
                 region: "{{ lookup('env', 'RACKSPACE_REGION') }}"
                 tenant_id: "{{ lookup('env', 'RACKSPACE_TENANT_ID') }}"
-                container: "Packer-ESXi"
-                src: "{{ build_path }}/output"
+                container: "packer-images"
+                src: "{{ item.path }}"
+                dest: "{{ os }}/{{ os_version }}/{{ item.path | | basename }}-{{ ansible_date_time.date }}.qcow2"
                 method: put
+              with_items:
+                - image_location.files
 
           when:
             - packer_run is defined

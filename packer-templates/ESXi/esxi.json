@@ -77,8 +77,6 @@
     "memory": "16384",
     "output_directory": "output",
     "remove_interfaces": "True",
-    "save_to_dir": "output",
-    "save_to_filename": "esxi67_x64-{{isotime \"2006-01-02\"}}",
     "shutdown_command": "esxcli system maintenanceMode set -e true -t 0; esxcli system shutdown poweroff -d 10 -r \"Packer Shutdown\"; esxcli system maintenanceMode set -e false -t 0",
     "ssh_password": "VMw@re1",
     "ssh_username": "root",
