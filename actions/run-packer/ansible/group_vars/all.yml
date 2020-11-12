@@ -22,7 +22,7 @@ build_template: "{{ lookup('env', 'BUILD_TEMPLATE') | default('template.json', T
 packer_esxi_repo: "{{ lookup('env', 'PACKER_ESXI_REPO') | default('', True)}}" # github repo containing Packer templates to use
 os: "{{ lookup('env', 'PACKER_OS') | default('ESXi', True) }}" # OS from packer-templates/
 os_version: "{{ lookup('env', 'PACKER_OS_VERSION') | default('6.7', True) }}" # OS release
-vib_folder: "{{ build_path }}/packer-templates/{{ os }}/{{ version }}/http"
+vib_folder: "{{ build_path }}/packer-templates/{{ os }}/{{ os_version }}/http"
 
 # ESXi Settings
 esxi_iso_url: "{{ lookup('env', 'ESXI_ISO_URL') | default('', True)}}" # URL to ESXi ISO. Store in a github secret
