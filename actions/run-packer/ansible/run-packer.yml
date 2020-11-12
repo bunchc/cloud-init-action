@@ -49,7 +49,7 @@
 
         - name: Copy cloud-init VIB into place
           copy:
-            dest: "{{ build_path }}/http/"
+            dest: "{{ vib_folder }}"
             src: "{{ vib_location.files.0.path }}"
           when:
             - vib_location is defined
