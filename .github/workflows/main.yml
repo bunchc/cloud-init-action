@@ -18,7 +18,7 @@ env:
   RACKSPACE_IMAGE: ${{ secrets.RACKSPACE_IMAGE }} # 563929f6-4b68-4b1f-8403-d2371e78d913 - Stored as a GH secret, should be replaced with a variable
   # Playbook settings
   RACKSPACE_DEBUG: false # Run some debugging functions in the playbooks
-  RACKSPACE_DESTROY: true # Destroy the onmetal host on failure and at the end of the run
+  RACKSPACE_DESTROY: false # Destroy the onmetal host on failure and at the end of the run
   # Packer settings
   PACKER_ESXI_REPO: "git@github.com:bunchc/cloud-init-action.git"
   PACKER_LOG: "1" # Tells packer to emit verbose logs to the terminal
