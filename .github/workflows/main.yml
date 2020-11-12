@@ -20,6 +20,7 @@ env:
   RACKSPACE_DEBUG: false # Run some debugging functions in the playbooks
   RACKSPACE_DESTROY: true # Destroy the onmetal host on failure and at the end of the run
   # Packer settings
+  PACKER_ESXI_REPO: "git@github.com:bunchc/cloud-init-action.git"
   PACKER_LOG: "1" # Tells packer to emit verbose logs to the terminal
   PACKER_LOG_PATH: "/github/workspace/packer.log"   # Path for packer to dump logs to
   BUILD_TEMPLATE: "new-template.json"
@@ -114,7 +115,6 @@ jobs:
         env:
           ESXI_ISO_URL: ${{ secrets.ESXI_ISO_URL }}
           ESXI_ISO_CHECKSUM: ${{ secrets.ESXI_ISO_CHECKSUM }}
-          PACKER_ESXI_REPO: ${{ secrets.PACKER_ESXI_REPO }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         uses: ./actions/run-packer/
         with:
