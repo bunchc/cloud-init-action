@@ -96,7 +96,11 @@
                 path: "{{ build_path }}/packer-templates/{{ os }}/{{ os_version }}/output/"
                 pattern: "*{{ os | lower }}{{ os_version }}*"
               register: image_location
-              
+
+            - name: Dump image_location
+              debug:
+                var: image_location
+
             - name: Upload Ironic image
               rax_files_objects:
                 api_key: "{{ lookup('env', 'RACKSPACE_API_TOKEN') }}"
